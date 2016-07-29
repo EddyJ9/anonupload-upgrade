@@ -7,8 +7,13 @@
 <body>
 <form action="/upload" enctype="multipart/form-data" method="post">
     <input type="file" name="file"/>
+    <input type="text" placeholder="Enter a Comment" name="comment"/>
+    <input type="password" placeholder="(Optional) Enter a Password" name="password"/>
+    <input type="checkbox" name="permanent" value="true"/> Make File Permanent?
     <button type="submit">Upload</button>
 </form>
+
+
 <div id="fileList"></div>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
 <script src="main.js"></script>
