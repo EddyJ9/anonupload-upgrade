@@ -9,17 +9,13 @@ function getFiles(filesData){
         }
         $("#fileList").append(elem);
         var deleteFile = filesData[i].filename;
-        var lineBreak = $('<form action="/delete" method="post">\
+        var deleteForm = $('<form action="/delete" method="post">\
             <input type="password" placeholder="(Optional) Enter deletion Password" name="password"/>\
             <input id="fileToDelete" type="text" name="fileName" hidden/>\
             <button type="submit">Delete</button>\
             </form> <br/>');
-        $("#fileList").append(lineBreak);
+        $("#fileList").append(deleteForm);
         $("input[id=fileToDelete]").val(deleteFile);
-
     }
 }
-
 $.get("/files", getFiles);
-
-// $.get("/delete, 

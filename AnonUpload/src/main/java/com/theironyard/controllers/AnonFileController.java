@@ -38,7 +38,7 @@ public class AnonFileController {
         FileOutputStream fos = new FileOutputStream(f);
         fos.write(file.getBytes());
         AnonFile anonFile = new AnonFile(f.getName(), file.getOriginalFilename());
-        if(anonFile.getPassword() == null){
+        if(anonFile.getPassword() != null){
             anonFile.setPassword(PasswordStorage.createHash(password));
         }
         if(!comment.isEmpty()){
@@ -49,33 +49,25 @@ public class AnonFileController {
         }else{
             anonFile.setPermanent(true);
         }
-
         long nonPermFiles = repository.countByPermanentFalse();
-        if(nonPermFiles >= LIMIT ){
+        while(nonPermFiles >= LIMIT ){
             AnonFile deleteFile = repository.findFirstByPermanentFalseOrderByIdAsc();
             repository.delete(deleteFile);
         }
         repository.save(anonFile);
-
         response.sendRedirect("/");
     }
-
     @RequestMapping(path = "/files", method = RequestMethod.GET)
     public List<AnonFile> getFiles(){
         return repository.findAll();
     }
-
     @RequestMapping(path = "/delete",method = RequestMethod.POST)
     public void deleteFile(String fileName, String password, HttpServletResponse respone) throws Exception {
         AnonFile fileToDelete = repository.findByFilename(fileName);
-        if(fileToDelete.getPassword().isEmpty()){
+        if(fileToDelete.getPassword().isEmpty() && PasswordStorage.verifyPassword(password, fileToDelete.getPassword())){
             repository.delete(fileToDelete);
         }else{
-            if(PasswordStorage.verifyPassword(password, fileToDelete.getPassword())){
-                repository.delete(fileToDelete);
-            }else{
-                throw new Exception();
-            }
+            throw new Exception();
         }
         respone.sendRedirect("/");
     }
